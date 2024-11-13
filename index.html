@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .quiz-container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .intro {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px 0;
+            text-align: left;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz de JavaScript</h1>
+        <p class="intro">Prepare-se para testar seus conhecimentos de JavaScript! Vamos ver quantas você acerta!</p>
+        <div id="quiz">
+            <p class="question" id="question"></p>
+            <ul class="options" id="options"></ul>
+            <button class="button" onclick="nextQuestion()">Próxima Pergunta</button>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Perguntas do quiz
+        const questions = [
+            { question: "Qual é a saída de 'typeof NaN' em JavaScript?", options: ["Number", "Undefined", "String", "Boolean"], answer: "Number" },
+            { question: "Qual método é usado para converter um objeto JSON em uma string?", options: ["JSON.parse()", "JSON.stringify()", "JSON.object()", "JSON.toString()"], answer: "JSON.stringify()" },
+            { question: "Qual é a palavra-chave usada para declarar uma variável constante?", options: ["let", "var", "constant", "const"], answer: "const" },
+            { question: "Qual é a saída de 'null == undefined'?", options: ["true", "false", "Erro", "Depende do navegador"], answer: "true" },
+            { question: "Como você declara uma função em JavaScript?", options: ["function = minhaFuncao()", "def minhaFuncao()", "function minhaFuncao()", "minhaFuncao()"], answer: "function minhaFuncao()" },
+            { question: "Qual método adiciona um elemento ao final de um array?", options: ["push()", "pop()", "shift()", "unshift()"], answer: "push()" },
+            { question: "Qual operador é usado para comparar tanto valor quanto tipo em JavaScript?", options: ["==", "===", "!=", "!=="], answer: "===" },
+            { question: "Qual método retorna um número arredondado para o inteiro mais próximo?", options: ["Math.round()", "Math.floor()", "Math.ceil()", "Math.abs()"], answer: "Math.round()" },
+            { question: "Qual é o valor padrão de 'this' em uma função regular no escopo global?", options: ["null", "undefined", "window", "global"], answer: "window" },
+            { question: "Qual evento é disparado quando um usuário clica em um elemento HTML?", options: ["onchange", "onclick", "onhover", "onload"], answer: "onclick" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function displayQuestion() {
+            document.getElementById("result").innerHTML = "";
+            if (currentQuestion < questions.length) {
+                const questionData = questions[currentQuestion];
+                document.getElementById("question").textContent = questionData.question;
+
+                const optionsList = document.getElementById("options");
+                optionsList.innerHTML = "";
+
+                questionData.options.forEach(option => {
+                    const li = document.createElement("li");
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.value = option;
+                    radio.name = "option";
+                    li.appendChild(radio);
+                    li.appendChild(document.createTextNode(option));
+                    optionsList.appendChild(li);
+                });
+            } else {
+                document.getElementById("quiz").innerHTML = `
+                    <h2>Você completou o quiz!</h2>
+                    <p>Sua pontuação: ${score} de ${questions.length}</p>
+                    <button class="button" onclick="resetQuiz()">Reiniciar Quiz</button>
+                `;
+            }
+        }
+
+        function checkAnswer() {
+            const selectedOption = document.querySelector("input[name='option']:checked");
+            if (selectedOption) {
+                const questionData = questions[currentQuestion];
+                if (selectedOption.value === questionData.answer) {
+                    score++;
+                }
+            } else {
+                alert("Por favor, selecione uma resposta.");
+            }
+        }
+
+        function nextQuestion() {
+            checkAnswer();
+            currentQuestion++;
+            displayQuestion();
+        }
+
+        function resetQuiz() {
+            score = 0;
+            currentQuestion = 0;
+            document.getElementById("quiz").innerHTML = `
+                <p class="question" id="question"></p>
+                <ul class="options" id="options"></ul>
+                <button class="button" onclick="nextQuestion()">Próxima Pergunta</button>
+                <div class="result" id="result"></div>
+            `;
+            displayQuestion();
+        }
+
+        // Iniciar quiz
+        displayQuestion();
+    </script>
+</body>
+</html>
